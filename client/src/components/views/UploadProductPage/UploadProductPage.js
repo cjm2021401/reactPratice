@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Typography, Button, Form, Input} from "antd";
-
+import FileUpload from "../../utils/FileUpload";
 //const {Title}=Typography;
 const {TextArea} =Input;
 const  Continents=[
@@ -39,10 +39,10 @@ function UploadProductPage() {
         <div>
             <div style={{maxWidth:'700px', margin:"2rem auto"}}>
                 <div style={{textAlign:"center", marginBottom:'2rem'}}>
-                        <h2>굿 상품 업로드</h2>
+                        <h2>굿즈 상품 업로드</h2>
                 </div>
                     <Form>
-                        {/*dropzone*/}
+                        <FileUpload/>
 
                         <br/>
                         <br/>
