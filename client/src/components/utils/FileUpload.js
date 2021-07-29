@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import Dropzone from 'react-dropzone'
 import {Icon} from 'antd';   //아이콘 가져옴
 import axios from 'axios';  //파일 넘겨주기위함
-function FileUpload(){
+function FileUpload(props){
 
     const [Images, setImages] = useState([])//[]한이유는 여러개 올ㄹ릴수있
 
@@ -17,10 +17,18 @@ function FileUpload(){
             .then(response => {
                 if(response.data.success){  //성공했을때
                     setImages([...Images, response.data.filePath])     //...Images는 기존 이미지 가져오기
+                    props.refreshFuction([...Images, response.data.filePath])
                 }else{
                     alert('fail to save file')  //실패했을떄
                 }
             })
+    }
+    const delteHandeler =(image) =>{
+        const currentIndex= Images.indexOf(image)
+        let newImages=[...Images]
+        newImages.splice(currentIndex,1)
+        setImages(newImages)
+        props.refreshFuction(newImages)
     }
 
     return(
@@ -38,7 +46,7 @@ function FileUpload(){
 
             <div style={{display:'flex', width:'350px', height : '240px', overflow : 'scroll'}}>
                 {Images.map((image, index) =>(
-                    <div key={index}>
+                    <div onClick={() =>delteHandeler(image)} key={index}>
                         <img style={{minWidth:'300px', width:'300px', height: '240px'}}
                              src={`http://localhost:5000/${image}`}
                              />

@@ -1,6 +1,9 @@
 import React, {useState} from "react";
 import {Typography, Button, Form, Input} from "antd";
 import FileUpload from "../../utils/FileUpload";
+import axios from 'axios';
+import {DiScriptcs} from "react-icons/all";
+
 //const {Title}=Typography;
 const {TextArea} =Input;
 const  Continents=[
@@ -13,7 +16,7 @@ const  Continents=[
     {key:7, value:"Antarctica"}
 
 ]
-function UploadProductPage() {
+function UploadProductPage(props) {
     const [Title, setTitle] =useState("") //input의 value를 다이나믹하게하기위해
     const [Description, setDescription] =useState("")
     const [Price, setPrice] =useState(0)
@@ -34,15 +37,46 @@ function UploadProductPage() {
     const continentChangeHandler =(event) =>{
         setContinent(event.currentTarget.value)
     }
+    const updateImages= (newImages) =>{
+        setImages(newImages)
+    }
+    const submitHandler=(event)=>{
+        /*event.preventDefault();//확인누를떄 화면 자동 리프레쉬 막음*/
 
+        //간단한 유효성체크 모든칸 체크
+        if(!Title ||!Description ||!Price || ! Continent ||! Images){
+            return alert("모든 값을 넣어 주세요")
+        }
+
+        //서버로 리퀘스트 보내
+        const body={
+            //현재 로그인 된 사람의 아이디가져와야함
+            writer: props.user.userData._id,
+            title: Title,
+            description : Description,
+            price:Price,
+            continent :Continent,
+            images:Images
+        }
+        axios.post("/api/product", body)
+            .then(response =>{
+                if(response.data.success) {
+                    alert("상품 등록에 성공했습니다.")
+                    props.history.push('/') /*경로이동 */
+                }else{
+                    alert("상품 등록에 실패했습니다.")
+                }
+            })
+
+    }
     return (
         <div>
             <div style={{maxWidth:'700px', margin:"2rem auto"}}>
                 <div style={{textAlign:"center", marginBottom:'2rem'}}>
                         <h2>굿즈 상품 업로드</h2>
                 </div>
-                    <Form>
-                        <FileUpload/>
+                    <Form onSubmit={submitHandler}>
+                        <FileUpload refreshFuction={updateImages}/>
 
                         <br/>
                         <br/>
@@ -66,7 +100,7 @@ function UploadProductPage() {
                         </select>
                         <br/>
                         <br/>
-                        <Button>
+                        <Button type="submit" onClick={submitHandler}>
                             확인
                         </Button>
                     </Form>
