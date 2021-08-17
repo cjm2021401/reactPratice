@@ -1,33 +1,20 @@
-const continents=[
+const category=[
     {
         "_id" :1,
-        "name" : "Africa"
+        "name" : "Top"
     },
     {
         "_id" :2,
-        "name" : "Europe"
+        "name" : "Pants"
     },
     {
         "_id" :3,
-        "name" : "Asia"
+        "name" : "Accessories"
     },
     {
         "_id" :4,
-        "name" : "North America"
-    },
-    {
-        "_id" :5,
-        "name" : "South America"
-    },
-
-    {
-        "_id" :6,
-        "name" : "Australia"
-    },
-    {
-        "_id" :7,
-        "name" : "Antarctica "
-    },
+        "name" : "Etc"
+    }
 ]
 
 const price=[
@@ -38,32 +25,27 @@ const price=[
     },
     {
         "_id" : 1,
-        "name" : "$0 to $199",
-        "array" :[0, 199],
+        "name" : "0 to 10000",
+        "array" :[0, 10000],
     },
     {
         "_id" : 2,
-        "name" : "$200 to $249",
-        "array" :[200, 249],
+        "name" : "10000 to 30000",
+        "array" :[10000, 30000],
     },
     {
         "_id" : 3,
-        "name" : "$250 to 279",
-        "array" :[250, 279],
+        "name" : "30000 to 50000",
+        "array" :[30000, 50000],
     },
     {
         "_id" : 4,
-        "name" : "$280 to $299",
-        "array" :[280, 299],
-    },
-    {
-        "_id" : 5,
-        "name" : "More than $300",
-        "array" :[300, 1500000],
-    },
+        "name" : "More then 50000",
+        "array" :[50000, 1000000],
+    }
 ]
 
 export {
-    continents,
+    category,
     price
 }

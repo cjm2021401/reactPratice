@@ -8,7 +8,7 @@ function Footer() {
             flexDirection: 'column', alignItems: 'center',
             justifyContent: 'center', fontSize:'1rem'
         }}>
-           <p> Everyday, we move over the city  <Icon type="smile" /></p>
+           <p> Everyday, we move over the city </p>
         </div>
     )
 }

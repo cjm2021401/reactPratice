@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const {Product} =require('../models/Product')
+const {admin}=require("../middleware/admin");
+const {auth}=require("../middleware/auth")
 //=================================
 //             Product
 //=================================
@@ -31,7 +33,7 @@ router.post('/image', (req,res)=>{
 
 })
 
-router.post('/', (req,res)=>{
+router.post('/', auth, admin,(req,res)=>{
 
    //받아온 정보들을 db에 넣어준
     const product=new Product(req.body)
@@ -46,6 +48,7 @@ router.post('/products', (req,res)=>{
 
     let limit=req.body.limit ? parseInt(req.body.limit) : 20;
     let skip=req.body.skip ? parseInt(req.body.skip) : 0;
+    let term = req.body.searchTerm
     let findArgs = {};
     for(let key in req.body.filters){
         if(req.body.filters[key].length>0){
@@ -64,16 +67,50 @@ router.post('/products', (req,res)=>{
         }
     }
 
+    if(term){
+        Product.find(findArgs)//찾는것 지금은 조건 x
+            .find({$text:{$search: term}})
+            .populate("writer")//writer의 모든 정보 가져옴
+            .skip(skip)
+            .limit(limit)
+            .exec((err, productsInfo) => {
+                if (err) return res.status(400).json({success: false, err})
+                return res.status(200).json({success: true, productsInfo, postSize: productsInfo.length})
+            })
+    }else {
+        //product collectoin에 들어있는 모든 상품 정보를 가져오기
+        Product.find(findArgs)//찾는것 지금은 조건 x
+            .populate("writer")//writer의 모든 정보 가져옴
+            .skip(skip)
+            .limit(limit)
+            .exec((err, productsInfo) => {
+                if (err) return res.status(400).json({success: false, err})
+                return res.status(200).json({success: true, productsInfo, postSize: productsInfo.length})
+            })
+    }
+})
 
-    //product collectoin에 들어있는 모든 상품 정보를 가져오기
-    Product.find(findArgs)//찾는것 지금은 조건 x
-        .populate("writer")//writer의 모든 정보 가져옴
-        .skip(skip)
-        .limit(limit)
-        .exec((err,productsInfo)=>{
-            if(err) return res.status(400).json({success:false,err})
-            return res.status(200).json({success:true, productsInfo, postSize: productsInfo.length})
+router.get('/products_by_id', (req,res)=>{
+
+    let type = req.query.type
+    let productIds = req.query.id
+
+    if(type==="array"){
+        let ids =req.query.id.split(',')
+        productIds = ids.map(item=>{
+            return item
+        })
+    }
+    //productId를 이용해서 db에서 productid와 같은 상품 가져옴
+    Product.find({_id: { $in : productIds}})
+        .populate('writer')
+        .exec((err,product)=>{
+            if(err) return res.status(400).send(err)
+            return res.status(200).send( product)
         })
 })
+
+
+
 
 module.exports = router;

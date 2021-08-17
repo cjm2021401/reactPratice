@@ -24,7 +24,15 @@ const userSchema = mongoose.Schema({
     },
     role : {
         type:Number,
-        default: 0 
+        default: 0
+    },
+    cart: {
+        type: Array,
+        default: []
+    },
+    history:{
+        type: Array,
+        default: []
     },
     image: String,
     token : {

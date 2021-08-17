@@ -16,7 +16,7 @@ const productSchema = mongoose.Schema({
         type:Number,
         default: 0
     },
-    continent :{
+    category :{
       type:  Number,
         default :1
     },
@@ -24,17 +24,25 @@ const productSchema = mongoose.Schema({
         type:Array,
         default: []
     },
-    sold:{
+    populate:{
         type : Number,
         maxLength: 100,
         default: 0
     },
-    views :{
-        type: Number,
-        default :0
-    },
 
 }, { timestamp: true})
+
+productSchema.index({
+    title:'text',
+    description:'text'
+},{
+    weight:{
+        title:5,
+        category: 3,
+        description :1
+    }
+})
+
 const Product = mongoose.model('Product', productSchema);
 
 module.exports = { Product }
